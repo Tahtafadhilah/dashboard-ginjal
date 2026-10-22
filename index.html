@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Analisis Rekam Medis Penyakit Ginjal - Tahta Wussatil Fadhilah</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        body {
+            background-color: #f4f6f8;
+            color: #1e293b;
+            padding: 24px;
+        }
+        .header {
+            background: linear-gradient(135deg, #009688, #00796b);
+            color: white;
+            padding: 28px 32px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 15px -3px rgba(0, 150, 136, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .header p {
+            font-size: 13px;
+            opacity: 0.95;
+            line-height: 1.5;
+        }
+        .identity-card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 12px;
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            line-height: 1.6;
+        }
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .kpi-card {
+            background: white;
+            padding: 20px;
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .kpi-title {
+            font-size: 11px;
+            color: #64748b;
+            font-weight: 700;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .kpi-value {
+            font-size: 26px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .kpi-sub {
+            font-size: 12px;
+            color: #0d9488;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        .chart-card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        .chart-header {
+            background: #009688;
+            color: white;
+            padding: 14px 20px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .chart-body {
+            padding: 20px;
+            position: relative;
+            height: 310px;
+        }
+        .insight-section {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        .insight-section h3 {
+            font-size: 16px;
+            color: #00796b;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .insight-list {
+            list-style: none;
+            padding: 0;
+        }
+        .insight-list li {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #334155;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .insight-list li::before {
+            content: "•";
+            color: #009688;
+            font-weight: bold;
+            font-size: 18px;
+            position: absolute;
+            left: 0;
+            top: -2px;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #64748b;
+            font-size: 12px;
+            border-top: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <div class="header">
+        <div>
+            <h1>Dashboard Analisis Rekam Medis Penyakit Ginjal</h1>
+            <p>Laporan Risiko Klinis, Komorbiditas Hipertensi & Indikator eGFR Pasien</p>
+            <p style="margin-top: 6px; font-size: 12px; opacity: 0.8;">Sumber Data: Chronic Kidney Disease Dataset (Kaggle)</p>
+        </div>
+        <div class="identity-card">
+            <strong>Nama:</strong> Tahta Wussatil Fadhilah<br>
+            <strong>NIM:</strong> P1337437124033 | <strong>Kelas:</strong> 2A (D3 RMIK)<br>
+            <strong>Dosen Pengampu:</strong> Setya Wijayanta, S.T., M.Kes.
+        </div>
+    </div>
+
+    <!-- Scorecards KPI -->
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-title">Total Pasien Analyzed</div>
+            <div class="kpi-value">20,538</div>
+            <div class="kpi-sub">Total Rekam Medis</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-title">Pasien Tanpa Penyakit Ginjal</div>
+            <div class="kpi-value">16,432</div>
+            <div class="kpi-sub">80.01% (No Disease)</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-title">Pasien Berisiko / Terdiagnosis</div>
+            <div class="kpi-value">4,106</div>
+            <div class="kpi-sub">19.99% Total Risiko</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-title">Rata-rata eGFR Pasien</div>
+            <div class="kpi-value">62.2 <span style="font-size: 15px;">mL/min</span></div>
+            <div class="kpi-sub">Fungsi Filtrasi Ginjal</div>
+        </div>
+    </div>
+
+    <!-- Charts Grid -->
+    <div class="dashboard-grid">
+        <div class="chart-card">
+            <div class="chart-header">Proporsi Tingkat Keparahan Ginjal (Target)</div>
+            <div class="chart-body"><canvas id="donutChart"></canvas></div>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-header">Jumlah Pasien Hipertensi per Risiko Ginjal</div>
+            <div class="chart-body"><canvas id="colChart1"></canvas></div>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-header">Distribusi Risiko Ginjal Berdasarkan Hipertensi</div>
+            <div class="chart-body"><canvas id="colChart2"></canvas></div>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-header">Korelasi Usia Pasien terhadap Nilai eGFR</div>
+            <div class="chart-body"><canvas id="scatterChart"></canvas></div>
+        </div>
+    </div>
+
+    <!-- Insight Section -->
+    <div class="insight-section">
+        <h3>💡 Insight & Interpretasi Informasi Kesehatan</h3>
+        <ul class="insight-list">
+            <li><strong>Distribusi Risiko:</strong> Mayoritas pasien terdata berada pada kondisi normal (80.01%). Namun, 19.99% pasien teridentifikasi memiliki risiko kesehatan ginjal yang memerlukan perhatian medis terencana.</li>
+            <li><strong>Pengaruh Komorbiditas:</strong> Terlihat keterkaitan kuat antara riwayat hipertensi dengan tingkat keparahan risiko ginjal, di mana proporsi penderita hipertensi mendominasi pada kelompok risiko tinggi hingga parah (Severe Disease).</li>
+            <li><strong>Perspektif RMIK:</strong> Hasil visualisasi ini menegaskan pentingnya pengodean ICD-10 yang presisi untuk diagnosis sekunder serta integrasi sistem peringatan dini pada Rekam Medis Elektronik (RME) saat indikator fungsi filtrasi ginjal (eGFR) pasien mulai menurun.</li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        Dibuat untuk Tugas Kuliah | Program Studi D3 Rekam Medis dan Informasi Kesehatan Poltekkes Kemenkes Semarang
+    </div>
+
+    <script>
+        // 1. Donut Chart
+        new Chart(document.getElementById('donutChart').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['No_Disease', 'Low_Risk', 'Moderate_Risk', 'High_Risk', 'Severe_Disease'],
+                datasets: [{
+                    data: [16432, 2054, 821, 821, 410],
+                    backgroundColor: ['#3b82f6', '#f97316', '#84cc16', '#8b5cf6', '#06b6d4']
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
+        });
+
+        // 2. Column Chart 1
+        new Chart(document.getElementById('colChart1').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['Moderate_Risk', 'No_Disease', 'Low_Risk', 'High_Risk', 'Severe_Disease'],
+                datasets: [
+                    { label: 'Hipertensi (Yes)', data: [389, 8283, 1019, 404, 216], backgroundColor: '#3b82f6' },
+                    { label: 'Hipertensi (No)', data: [432, 8149, 1035, 417, 194], backgroundColor: '#f97316' }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }
+        });
+
+        // 3. Column Chart 2
+        new Chart(document.getElementById('colChart2').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['Hipertensi: YES', 'Hipertensi: NO'],
+                datasets: [
+                    { label: 'No_Disease', data: [8283, 8149], backgroundColor: '#3b82f6' },
+                    { label: 'Low_Risk', data: [1019, 1035], backgroundColor: '#f97316' },
+                    { label: 'High_Risk', data: [404, 417], backgroundColor: '#8b5cf6' },
+                    { label: 'Moderate_Risk', data: [389, 432], backgroundColor: '#84cc16' },
+                    { label: 'Severe_Disease', data: [216, 194], backgroundColor: '#06b6d4' }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }
+        });
+
+        // 4. Scatter Plot
+        new Chart(document.getElementById('scatterChart').getContext('2d'), {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Rata-rata eGFR per Usia',
+                    data: [
+                        {x: 5, y: 63.1}, {x: 12, y: 61.3}, {x: 18, y: 59.6}, {x: 25, y: 61.4},
+                        {x: 32, y: 59.7}, {x: 40, y: 59.7}, {x: 48, y: 60.1}, {x: 55, y: 61.5},
+                        {x: 63, y: 62.6}, {x: 70, y: 61.4}, {x: 78, y: 60.2}, {x: 88, y: 68.2}
+                    ],
+                    backgroundColor: '#3b82f6'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { title: { display: true, text: 'Usia Pasien (Tahun)' }, min: 0, max: 100 },
+                    y: { title: { display: true, text: 'eGFR (mL/min)' }, min: 50, max: 75 }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
